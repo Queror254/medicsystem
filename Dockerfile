@@ -18,9 +18,11 @@ RUN npm install --legacy-peer-deps --production=false
 # Copy Angular source code
 COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 
-# Copy external assets to the exact locations where Angular components expect them
-# This is a direct solution that matches the expected relative paths
+# Create proper directory structure for assets and themes to match expected import paths
+# This architectural solution avoids changing hundreds of import statements
 RUN mkdir -p ../../../../assets-dph ../../../../themes
+
+# Copy assets and themes to locations that match the expected relative paths from Angular components
 COPY Code/Websites/DanpheEMR/wwwroot/assets-dph/ ../../../../assets-dph/
 COPY Code/Websites/DanpheEMR/wwwroot/themes/ ../../../../themes/
 

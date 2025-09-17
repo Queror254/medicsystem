@@ -21,17 +21,7 @@
             "deployUrl": "/DanpheApp/dist/DanpheApp/",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "**/*",
-                "input": "../../../assets-dph",
-                "output": "/assets-dph/"
-              },
-              {
-                "glob": "**/*",
-                "input": "../../../themes",
-                "output": "/themes/"
-              }
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"
