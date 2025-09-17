@@ -18,16 +18,13 @@ RUN npm install --legacy-peer-deps --production=false
 # Copy Angular source code
 COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 
-# Create parent directories for external assets that Angular will copy during build
-# This leverages Angular's built-in asset handling instead of manual path manipulation
-RUN mkdir -p ../../../assets-dph ../../../themes
-
-# Copy external assets to parent directories where Angular expects them
-COPY Code/Websites/DanpheEMR/wwwroot/assets-dph/ ../../../assets-dph/
-COPY Code/Websites/DanpheEMR/wwwroot/themes/ ../../../themes/
+# Copy external assets to the exact locations where Angular components expect them
+# This is a direct solution that matches the expected relative paths
+RUN mkdir -p ../../../../assets-dph ../../../../themes
+COPY Code/Websites/DanpheEMR/wwwroot/assets-dph/ ../../../../assets-dph/
+COPY Code/Websites/DanpheEMR/wwwroot/themes/ ../../../../themes/
 
 # Build Angular application with increased memory and optimizations
-# Angular will now automatically include the external assets via angular.json configuration
 RUN node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build --prod --output-path=dist --base-href=/ --build-optimizer --aot
 
 # Stage 2: Build .NET application using Mono, which supports .NET Framework on Linux
