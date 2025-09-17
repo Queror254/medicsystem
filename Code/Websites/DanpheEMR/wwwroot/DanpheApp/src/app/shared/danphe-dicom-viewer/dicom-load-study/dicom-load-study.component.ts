@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Router } from '@angular/router';
 import * as cornerstone from 'cornerstone-core';
 import * as dicomParser from 'dicom-parser';
-import * as cornerstoneWADOImageLoader from '../../../../../../assets-dph/dicom-assets/cornerstone/lib/cornerstoneWADOImageLoader.js'
+import * as cornerstoneWADOImageLoader from '../../../../../assets-dph/dicom-assets/cornerstone/lib/cornerstoneWADOImageLoader.js'
 import { DICOMViewerComponent } from '../dicom-viewer/dicom-viewer.component';
 import { DicomDataModel } from '../shared/dicom-load-study.model';
 import { DicomService } from '../shared/dicom.service';
