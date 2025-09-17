@@ -38,3 +38,23 @@ logs/
 # Temporary files
 **/tmp/
 **/temp/
+
+# Large files that aren't needed for build
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

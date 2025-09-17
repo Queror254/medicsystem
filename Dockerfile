@@ -52,9 +52,13 @@ FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS final
 WORKDIR /app
 
 # Install curl for health checks
-RUN apt-get update && \
+# Update package sources to use archived Debian Buster repositories
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    apt-get update && \
     apt-get install -y curl && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create directories for application data
 RUN mkdir -p /app/uploads/LabReports \
@@ -81,16 +85,17 @@ ENV TZ=UTC
 
 # Create non-root user for security
 RUN groupadd -r danphe && useradd -r -g danphe danphe && \
-    chown -R danphe:danphe /app
+    chown -R danphe:danphe /app && \
+    chmod -R 755 /app
 
 USER danphe
 
 # Expose port (Render will set $PORT environment variable)
-EXPOSE ${PORT}
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT}/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/ || exit 1
 
 # Start the application
 ENTRYPOINT ["dotnet", "DanpheEMR.dll"]
