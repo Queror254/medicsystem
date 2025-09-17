@@ -22,7 +22,7 @@ COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 RUN ng build --prod --output-path=dist --base-href=/ --build-optimizer
 
 # Stage 2: Build .NET application
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS dotnet-build
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 AS dotnet-build
 
 WORKDIR /src
 
@@ -53,7 +53,7 @@ RUN dotnet publish ../Websites/DanpheEMR/DanpheEMR.csproj \
     --verbosity normal
 
 # Stage 3: Final runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS final
 
 WORKDIR /app
 
