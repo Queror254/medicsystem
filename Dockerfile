@@ -31,6 +31,7 @@ RUN apt-get update && \
     dpkg -i packages-microsoft-prod.deb && \
     apt-get update && \
     apt-get install -y dotnet-sdk-6.0 && \
+    apt-get install -y dotnet-targeting-pack-4.6.1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
