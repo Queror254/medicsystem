@@ -35,8 +35,13 @@ COPY Code/Utilities/ ../Utilities/
 # Fix case sensitivity issue for App.config, which is required by the project
 RUN if [ -f "../Websites/DanpheEMR/app.config" ]; then cp "../Websites/DanpheEMR/app.config" "../Websites/DanpheEMR/App.config"; fi
 
-# Install NuGet CLI for better package management
-RUN apt-get update && apt-get install -y nuget && apt-get clean
+# Fix repository sources for Debian Buster (EOL) and install NuGet CLI
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y nuget && \
+    apt-get clean
 
 # Create packages directory for legacy projects
 RUN mkdir -p ../../Solutions/packages
