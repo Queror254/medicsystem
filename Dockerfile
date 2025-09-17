@@ -35,8 +35,8 @@ COPY Code/Utilities/ ../Utilities/
 # Fix case sensitivity issue for App.config, which is required by the project
 RUN if [ -f "../Websites/DanpheEMR/app.config" ]; then cp "../Websites/DanpheEMR/app.config" "../Websites/DanpheEMR/App.config"; fi
 
-# Restore NuGet packages for the entire solution
-RUN nuget restore DanpheEMR.sln
+# Restore NuGet packages for the entire solution using msbuild's integrated restore
+RUN msbuild /t:Restore DanpheEMR.sln
 
 # Build and publish the main web application
 RUN msbuild /t:Publish /p:Configuration=Release /p:PublishDir=/app/publish/ ../Websites/DanpheEMR/DanpheEMR.csproj
