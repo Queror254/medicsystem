@@ -39,8 +39,8 @@ COPY Code/Websites/DanpheEMR/ ./DanpheEMR/
 # Fix case sensitivity issue for App.config
 RUN if [ -f "./DanpheEMR/app.config" ]; then cp "./DanpheEMR/app.config" "./DanpheEMR/App.config"; fi
 
-# Restore NuGet packages
-RUN dotnet restore DanpheEMR/DanpheEMR.csproj
+# Restore NuGet packages for entire solution
+RUN dotnet restore
 
 # Build and publish the application
 RUN dotnet publish DanpheEMR/DanpheEMR.csproj \
