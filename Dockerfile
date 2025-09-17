@@ -18,8 +18,8 @@ RUN npm install --legacy-peer-deps --production=false
 # Copy Angular source code
 COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 
-# Build Angular application
-RUN ng build --prod --output-path=dist --base-href=/ --build-optimizer
+# Build Angular application with increased memory and optimizations
+RUN node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build --prod --output-path=dist --base-href=/ --build-optimizer --aot
 
 # Stage 2: Build .NET application using Mono, which supports .NET Framework on Linux
 FROM mono:latest AS dotnet-build

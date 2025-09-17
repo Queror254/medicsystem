@@ -1,5 +1,5 @@
 ﻿using DanpheEMR.ServerModel.SSFModels;
-using Newtonsoft.Json;
+using newtonsoft = Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -17,7 +17,7 @@ namespace DanpheEMR.Sync.SSF
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Add(ssfCred.SSFRemotekey, ssfCred.SSFRemoteValue);
             client.BaseAddress = new Uri(ssfCred.SSFurl);
-            var jsonContent = JsonConvert.SerializeObject(claimBooking);
+            var jsonContent = newtonsoft.JsonConvert.SerializeObject(claimBooking);
             StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var response = client.PostAsync($"BookingService", content).Result;
             SSF_RealTimeBookingServiceResponse realTimeBookingServiceResponse = new SSF_RealTimeBookingServiceResponse();

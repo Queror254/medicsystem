@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using DanpheEMR.ServerModel;
 using DanpheEMR.Sync.IRDNepal.Models;
 using DanpheEMR.Sync;
-using Newtonsoft.Json;
+using newtonsoft = Newtonsoft.Json;
 
 namespace DanpheEMR.Sync.IRDNepal
 {
@@ -38,7 +38,7 @@ namespace DanpheEMR.Sync.IRDNepal
                 try
                 {
                     IRD_BillViewModel salesBill = IRD_BillViewModel.GetMappedSalesBillForIRD(billTxn, false);
-                    irdLog.JsonData = JsonConvert.SerializeObject(salesBill);
+                    irdLog.JsonData = newtonsoft.JsonConvert.SerializeObject(salesBill);
                     responseMsg = DanpheEMR.Sync.IRDNepal.APIs.PostSalesBillToIRD(salesBill);
                 }
                 catch (Exception ex)
@@ -89,7 +89,7 @@ namespace DanpheEMR.Sync.IRDNepal
                 try
                 {
                     IRD_BillReturnViewModel salesRetBill = IRD_BillReturnViewModel.GetMappedSalesReturnBillForIRD(billRet, false);
-                    irdLog.JsonData = JsonConvert.SerializeObject(salesRetBill);
+                    irdLog.JsonData = newtonsoft.JsonConvert.SerializeObject(salesRetBill);
                     responseMsg = DanpheEMR.Sync.IRDNepal.APIs.PostSalesReturnBillToIRD(salesRetBill);
 
                 }
@@ -144,7 +144,7 @@ namespace DanpheEMR.Sync.IRDNepal
                     invoice.ShortName = GetShortName(dbContext, invoice.PatientId);
                     invoice.FiscalYear = GetFiscalYearNameById(dbContext, invoice.FiscalYearId);
                     IRD_PHRMBillSaleViewModel phrmInvoice = IRD_PHRMBillSaleViewModel.GetMappedInvoiceForIRD(invoice, false);
-                    irdLog.JsonData = JsonConvert.SerializeObject(phrmInvoice);
+                    irdLog.JsonData = newtonsoft.JsonConvert.SerializeObject(phrmInvoice);
                     responseMsg = DanpheEMR.Sync.IRDNepal.APIs.PostPhrmInvoiceToIRD(phrmInvoice);
                 }
                 catch (Exception ex)
@@ -199,7 +199,7 @@ namespace DanpheEMR.Sync.IRDNepal
                     IRD_PHRMBillSaleReturnViewModel salesRetBill = IRD_PHRMBillSaleReturnViewModel.GetMappedPhrmSalesReturnBillForIRD(InvoiceRet, false);
                     salesRetBill.fiscal_year = GetFiscalYearNameById(dbContext,InvoiceRet.PatientId);
                     salesRetBill.credit_note_number=GetCreditNoteNumberByInvoiceId(dbContext,InvoiceRet.InvoiceId).ToString();
-                    irdLog.JsonData = JsonConvert.SerializeObject(salesRetBill);
+                    irdLog.JsonData = newtonsoft.JsonConvert.SerializeObject(salesRetBill);
                     responseMsg = DanpheEMR.Sync.IRDNepal.APIs.PostPhrmInvoiceReturnToIRD(salesRetBill);
                 }
                 catch (Exception ex)
