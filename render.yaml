@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: danphe-emr
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: AZURE_SQL_SERVER
+        value: your-azure-sql-server-name
+      - key: AZURE_SQL_USER
+        value: your-azure-sql-username
+      - key: AZURE_SQL_PASSWORD
+        value: your-azure-sql-password
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+    healthCheckPath: /health

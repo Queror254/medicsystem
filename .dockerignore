@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+README.md
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+**/bin/
+**/obj/
+**/out/
+
+# Node modules and build outputs
+**/node_modules/
+**/dist/
+**/build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.mdf
+*.ldf
+*.bak
+
+# Temporary files
+**/tmp/
+**/temp/
