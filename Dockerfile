@@ -21,12 +21,12 @@ COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 # Build Angular application
 RUN ng build --prod --output-path=dist --base-href=/ --build-optimizer
 
-# Stage 2: Build .NET application using Mono, which supports .NET Framework on Linux
-FROM mono:latest AS dotnet-build
+# Stage 2: Build .NET application
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS dotnet-build
 WORKDIR /src
 
 # Copy all project files, maintaining the solution's directory structure
-COPY Code/Solutions/*.sln ./
+COPY Code/Solutions/DanpheEMR.sln ./
 COPY Code/Solutions/global.json ./
 COPY Code/Components/ ../Components/
 COPY Code/Websites/DanpheEMR/ ../Websites/DanpheEMR/
@@ -35,14 +35,14 @@ COPY Code/Utilities/ ../Utilities/
 # Fix case sensitivity issue for App.config, which is required by the project
 RUN if [ -f "../Websites/DanpheEMR/app.config" ]; then cp "../Websites/DanpheEMR/app.config" "../Websites/DanpheEMR/App.config"; fi
 
-# Restore NuGet packages for the entire solution using msbuild's integrated restore
-RUN msbuild /t:Restore DanpheEMR.sln
+# Restore NuGet packages for the entire solution using the dotnet CLI
+RUN dotnet restore DanpheEMR.sln
 
 # Build and publish the main web application
-RUN msbuild /t:Publish /p:Configuration=Release /p:PublishDir=/app/publish/ ../Websites/DanpheEMR/DanpheEMR.csproj
+RUN dotnet publish Code/Websites/DanpheEMR/DanpheEMR.csproj -c Release -o /app/publish --no-restore
 
-# Stage 3: Final runtime image using Mono
-FROM mono:slim AS final
+# Stage 3: Final runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
 
 # Install curl for health checks
@@ -93,5 +93,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8080}/ || exit 1
 
-# Start the application using the Mono runtime
-ENTRYPOINT ["mono", "DanpheEMR.exe"]
+# Start the application
+ENTRYPOINT ["dotnet", "DanpheEMR.dll"]

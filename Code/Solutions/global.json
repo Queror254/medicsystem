@@ -1,10 +1,4 @@
 ﻿{
-  "projects": [
-    "src",
-    "test"
-    //".\\src\\Web\\Plugins"
-
-  ],
   "sdk": {
     "version": "6.0.100",
     "rollForward": "latestMajor"
