@@ -6,7 +6,7 @@
 
   ],
   "sdk": {
-    "version": "7.0.100",
+    "version": "5.0.100",
     "rollForward": "latestMajor"
   }
 }
