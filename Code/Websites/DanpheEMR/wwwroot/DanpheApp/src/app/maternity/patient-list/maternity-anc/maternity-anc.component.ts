@@ -154,8 +154,8 @@ export class MaternityANCComponent {
     popupWinindow.document.open();
     var documentContent = "<html><head>";
     documentContent +=
-      `<link rel="stylesheet" type="text/css" href="../../../../../../assets-dph/external/global/plugins/bootstrap/css/bootstrap.min.css" />` +
-      `<link rel="stylesheet" type="text/css" href="../../../../../../themes/theme-default/DanpheStyle.css" />` +
+      `<link rel="stylesheet" type="text/css" href="../../../../../assets-dph/external/global/plugins/bootstrap/css/bootstrap.min.css" />` +
+      `<link rel="stylesheet" type="text/css" href="../../../../../themes/theme-default/DanpheStyle.css" />` +
       `<link rel="stylesheet" type="text/css" href="../../../../../../themes/theme-default/Danphe_ui_style.css" /></head>` +
       `<link rel="stylesheet" type="text/css" href="../../../../../../themes/theme-default/DanphePrintStyle.css" /></head>`;
 
