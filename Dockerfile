@@ -21,60 +21,32 @@ COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 # Build Angular application
 RUN ng build --prod --output-path=dist --base-href=/ --build-optimizer
 
-# Stage 2: Build .NET application
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS dotnet-build
-
-# Install .NET Framework targeting packs
-RUN apt-get update && \
-    apt-get install -y wget && \
-    wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    apt-get update && \
-    apt-get install -y dotnet-sdk-6.0 && \
-    apt-get install -y dotnet-targeting-pack-4.6 && \
-    apt-get install -y dotnet-targeting-pack-4.7 && \
-    apt-get install -y dotnet-targeting-pack-4.8 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+# Stage 2: Build .NET application using Mono, which supports .NET Framework on Linux
+FROM mono:latest AS dotnet-build
 WORKDIR /src
 
-# Copy solution and project files for better caching
+# Copy all project files, maintaining the solution's directory structure
 COPY Code/Solutions/*.sln ./
 COPY Code/Solutions/global.json ./
-
-# Copy all component projects to match solution file structure
 COPY Code/Components/ ../Components/
-
-# Copy main website project to match solution file structure
 COPY Code/Websites/DanpheEMR/ ../Websites/DanpheEMR/
-
-# Copy utilities to match solution file structure
 COPY Code/Utilities/ ../Utilities/
 
-# Fix case sensitivity issue for App.config
+# Fix case sensitivity issue for App.config, which is required by the project
 RUN if [ -f "../Websites/DanpheEMR/app.config" ]; then cp "../Websites/DanpheEMR/app.config" "../Websites/DanpheEMR/App.config"; fi
 
-# Restore NuGet packages for entire solution
-RUN dotnet restore
+# Restore NuGet packages for the entire solution
+RUN nuget restore DanpheEMR.sln
 
-# Build and publish the application
-RUN dotnet publish ../Websites/DanpheEMR/DanpheEMR.csproj \
-    -c Release \
-    -o /app/publish \
-    --no-restore \
-    --verbosity normal
+# Build and publish the main web application
+RUN msbuild /t:Publish /p:Configuration=Release /p:PublishDir=/app/publish/ ../Websites/DanpheEMR/DanpheEMR.csproj
 
-# Stage 3: Final runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
-
+# Stage 3: Final runtime image using Mono
+FROM mono:slim AS final
 WORKDIR /app
 
 # Install curl for health checks
-RUN apt-get update && \
-    apt-get install -y curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create directories for application data
 RUN mkdir -p /app/uploads/LabReports \
@@ -82,8 +54,8 @@ RUN mkdir -p /app/uploads/LabReports \
              /app/credentials \
              /app/wwwroot/DanpheApp
 
-# Copy published .NET application
-COPY --from=dotnet-build /app/publish ./
+# Copy published .NET application from the build stage
+COPY --from=dotnet-build /app/publish/ ./
 
 # Copy built Angular files to wwwroot
 COPY --from=angular-build /app/frontend/dist/ ./wwwroot/DanpheApp/
@@ -113,5 +85,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8080}/ || exit 1
 
-# Start the application
-ENTRYPOINT ["dotnet", "DanpheEMR.dll"]
+# Start the application using the Mono runtime
+ENTRYPOINT ["mono", "DanpheEMR.exe"]
