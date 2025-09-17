@@ -772,8 +772,8 @@ export class LabTestsViewReportFormat2Component {
     popupWinindow.document.open();
     var documentContent = "<html><head>";
     documentContent +=
-      `<link href="../../../../../assets-dph/external/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />` +
-      `<link rel="stylesheet" type="text/css" href="../../../../../themes/theme-default/DanpheStyle.css" />` +
+      `<link href="../../../../assets-dph/external/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />` +
+      `<link rel="stylesheet" type="text/css" href="../../../themes/theme-default/DanpheStyle.css" />` +
       `<link rel="stylesheet" type="text/css" href="../../../../../../themes/theme-default/LabReportPrint-format2.css" /></head>`;
 
     /// documentContent += '<link rel="stylesheet" type="text/css" href="../../../assets/global/plugins/bootstrap/css/bootstrap.min.css"/>';
