@@ -97,7 +97,7 @@ RUN groupadd -r danphe && useradd -r -g danphe danphe && \
 USER danphe
 
 # Expose port (Render will set $PORT environment variable)
-EXPOSE 8080
+EXPOSE 8080 
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
