@@ -30,14 +30,17 @@ WORKDIR /src
 COPY Code/Solutions/*.sln ./
 COPY Code/Solutions/global.json ./
 
-# Find and copy all .csproj files
-COPY Code/Websites/DanpheEMR/*.csproj ./DanpheEMR/
+# Copy all component projects first
+COPY Code/Components/ ./Components/
+
+# Copy main website project
+COPY Code/Websites/DanpheEMR/ ./DanpheEMR/
+
+# Fix case sensitivity issue for App.config
+RUN if [ -f "./DanpheEMR/app.config" ]; then cp "./DanpheEMR/app.config" "./DanpheEMR/App.config"; fi
 
 # Restore NuGet packages
 RUN dotnet restore DanpheEMR/DanpheEMR.csproj
-
-# Copy all source code
-COPY Code/Websites/DanpheEMR/ ./DanpheEMR/
 
 # Build and publish the application
 RUN dotnet publish DanpheEMR/DanpheEMR.csproj \
