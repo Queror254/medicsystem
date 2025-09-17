@@ -6,6 +6,7 @@ obj
 v16
 packages
 .vs
+.env
 package-lock.json
 $tf/
 
