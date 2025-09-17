@@ -46,7 +46,15 @@ FROM mono:slim AS final
 WORKDIR /app
 
 # Install curl for health checks
-RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+# The mono:slim image is based on Debian Buster, which is EOL.
+# We must point apt to the Debian archive repositories to install packages.
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
+    apt-get install -y curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create directories for application data
 RUN mkdir -p /app/uploads/LabReports \
