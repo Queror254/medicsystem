@@ -22,7 +22,17 @@ COPY Code/Websites/DanpheEMR/wwwroot/DanpheApp/ ./
 RUN ng build --prod --output-path=dist --base-href=/ --build-optimizer
 
 # Stage 2: Build .NET application
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 AS dotnet-build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS dotnet-build
+
+# Install .NET Framework 4.6.1 targeting pack
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y dotnet-sdk-6.0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /src
 
@@ -53,7 +63,7 @@ RUN dotnet publish ../Websites/DanpheEMR/DanpheEMR.csproj \
     --verbosity normal
 
 # Stage 3: Final runtime image
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 
 WORKDIR /app
 
